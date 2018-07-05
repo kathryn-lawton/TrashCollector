@@ -160,7 +160,7 @@ namespace TrashCollector.Controllers
 			if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Role = model.Role };
-                var result = await UserManager.CreateAsync(user, model.Password);
+				var result = UserManager.Create(user, model.Password);
 
 				var roleStore = new RoleStore<IdentityRole>(db);
 				var roleManager = new RoleManager<IdentityRole>(roleStore);
@@ -171,6 +171,7 @@ namespace TrashCollector.Controllers
 				if(model.Role == "Customer")
 				{
 					userManager.AddToRole(user.Id, "Customer");
+
 					if (result.Succeeded)
 					{
 						await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -181,14 +182,15 @@ namespace TrashCollector.Controllers
 						// var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
 						// await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-						return RedirectToAction("Create", "Customer");
+						return RedirectToAction("Create", "Customers");
 					}
 					AddErrors(result);
 				}
 
 				else if (model.Role == "Employee")
 				{
-					userManager.AddToRole(user.Id, "Employee");
+					// userManager.AddToRole(user.Id, "Employee");
+
 					if (result.Succeeded)
 					{
 						await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -199,13 +201,13 @@ namespace TrashCollector.Controllers
 						// var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
 						// await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-						return RedirectToAction("Create", "Employee");
+						return RedirectToAction("Create", "Employees");
 					}
 					AddErrors(result);
 				}
 				else
 				{
-
+					return View(model);
 				}
 
 				// var currentUserId = User.Identity.GetUserId();
