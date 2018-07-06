@@ -457,7 +457,8 @@ namespace TrashCollector.Controllers
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
-        public ActionResult ExternalLoginFailure()
+		[ValidateAntiForgeryToken]
+		public ActionResult ExternalLoginFailure()
         {
             return View();
         }
