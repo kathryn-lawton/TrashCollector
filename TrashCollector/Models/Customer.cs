@@ -17,23 +17,22 @@ namespace TrashCollector.Models
 		public string StreetAddress1 { get; set; }
 		public string StreetAddress2 { get; set; }
 
-		//[ForeignKey("CityId")]
-		//public int CityId { get; set; }
-	//	public City City { get; set; }
+		[ForeignKey("City")]
+		public int CityId { get; set; }
+		public City City { get; set; }
 
-		//[ForeignKey("StateId")]
-		//public int StateId { get; set; }
-		//public State State { get; set; }
+		[ForeignKey("State")]
+		public int StateId { get; set; }
+		public State State { get; set; }
 
-		//[ForeignKey("ZipcodeId")]
-		//public int ZipcodeId { get; set; }
-		//public Zipcode Zipcode { get; set; }
+		[ForeignKey("Zipcode")]
+		public int ZipcodeId { get; set; }
+		public Zipcode Zipcode { get; set; }
 
-		//[ForeignKey("PickupDayId")]
-		//public int PickupDaykId { get; set; }
-		//public PickupDay PickupDay { get; set; }
-		//pickup day of week
+		public string PickupDay { get; set; }
 
+		public bool PickupStatus { get; set; }
+										   
 		//[ForeignKey("BillingStatusId")]
 		//public int BillingStatusId { get; set; }
 		//public BillingStatus BillingStatus { get; set; }

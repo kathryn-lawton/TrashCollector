@@ -25,8 +25,8 @@ namespace TrashCollector.Models
 		//public int StateId { get; set; }
 		//public State State { get; set; }
 
-		//[ForeignKey("ZipcodeId")]
-		//public int ZipcodeId { get; set; }
-		//public Zipcode Zipcode { get; set; }
+		[ForeignKey("Zipcode")]
+		public int ZipcodeId { get; set; }
+		public Zipcode Zipcode { get; set; }
 	}
 }
