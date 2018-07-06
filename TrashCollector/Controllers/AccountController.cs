@@ -189,7 +189,7 @@ namespace TrashCollector.Controllers
 
 				else if (model.Role == "Employee")
 				{
-					// userManager.AddToRole(user.Id, "Employee");
+					 userManager.AddToRole(user.Id, "Employee");
 
 					if (result.Succeeded)
 					{
