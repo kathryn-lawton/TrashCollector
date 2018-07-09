@@ -28,7 +28,7 @@ namespace TrashCollector.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var customer = db.Customer.Where(c => c.CustomerId == id).Select(c => c).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
+			var customer = db.Customer.Where(c => c.CustomerId == id).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
             if (customer == null)
             {
                 return HttpNotFound();

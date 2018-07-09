@@ -21,20 +21,19 @@ namespace TrashCollector.Controllers
             return View(employee.ToList());
         }
 
-        // GET: Employees/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Employee employee = db.Employee.Find(id);
-            if (employee == null)
-            {
-                return HttpNotFound();
-            }
-            return View(employee);
-        }
+		public ActionResult Details(int? id)
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			var employee = db.Employee.Where(e => e.EmployeeId == id).Select(c => c).Include(e => e.FirstName).Include(e => e.LastName).Include(e => e.EmailAddress).Include(e => e.StreetAddress1).Include(e => e.StreetAddress1).Include(e => e.Zipcode).FirstOrDefault();
+			if (employee == null)
+			{
+				return HttpNotFound();
+			}
+			return View(employee);
+		}
 
         // GET: Employees/Create
         public ActionResult Create()
