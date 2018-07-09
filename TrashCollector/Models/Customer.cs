@@ -33,6 +33,11 @@ namespace TrashCollector.Models
 		public int PickupDayId { get; set; }
 		public PickupDay PickupDay { get; set; }
 
+		[ForeignKey("ApplicationUser")]
+		public string ApplicationUserID { get; set; }
+		public ApplicationUser ApplicationUser { get; set; }
+
+
 		public bool PickupStatus { get; set; }
 
 		// public IEnumerable<PickupDay> PickupDays { get; set; }										   

@@ -15,11 +15,18 @@ namespace TrashCollector.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Employees
+		[HttpGet]
         public ActionResult Index()
         {
             var employee = db.Employee.Include(e => e.Zipcode);
             return View(employee.ToList());
         }
+
+		//[HttpPost]
+		//public ActionResult Index(Employee employee)
+		//{
+		//	var customers = db.Customer.Where(c => c.Zipcode == employee.Zipcode).Include
+		//}
 
 		public ActionResult Details(int? id)
 		{
@@ -27,7 +34,7 @@ namespace TrashCollector.Controllers
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
-			var employee = db.Employee.Where(e => e.EmployeeId == id).Select(c => c).Include(e => e.FirstName).Include(e => e.LastName).Include(e => e.EmailAddress).Include(e => e.StreetAddress1).Include(e => e.StreetAddress1).Include(e => e.Zipcode).FirstOrDefault();
+			var employee = db.Employee.Where(e => e.EmployeeId == id).Select(c => c).Include(e => e.FirstName).Include(e => e.LastName).Include(e => e.EmailAddress).Include(e => e.Zipcode).FirstOrDefault();
 			if (employee == null)
 			{
 				return HttpNotFound();
@@ -47,7 +54,7 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,ZipcodeId")] Employee employee)
+        public ActionResult Create([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,ZipcodeId")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +88,7 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,ZipcodeId")] Employee employee)
+        public ActionResult Edit([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,ZipcodeId")] Employee employee)
         {
             if (ModelState.IsValid)
             {

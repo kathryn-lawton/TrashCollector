@@ -13,10 +13,10 @@ namespace TrashCollector.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-		protected override void Seed(TrashCollector.Models.ApplicationDbContext context)
-		{
+        protected override void Seed(TrashCollector.Models.ApplicationDbContext context)
+        {
 			context.Roles.AddOrUpdate(
-				r => r.Name,
+			r => r.Name,
 				new IdentityRole { Name = "Customer" },
 				new IdentityRole { Name = "Employee" }
 				);
@@ -132,5 +132,5 @@ namespace TrashCollector.Migrations
 				new Models.PickupDay { Name = "Friday" }
 				);
 		}
-		}
+    }
 }

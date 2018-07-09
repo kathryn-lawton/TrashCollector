@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -17,18 +18,20 @@ namespace TrashCollector.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            var customer = db.Customer.Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
-            return View(customer.ToList());
+			var currentUserId = User.Identity.GetUserId();
+			var customers = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
+            return View(customers.ToList());
         }
 
         // GET: Customers/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details()
         {
-            if (id == null)
+			var currentUserId = User.Identity.GetUserId();
+			if (currentUserId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-			var customer = db.Customer.Where(c => c.CustomerId == id).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
+			Customer customer = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
             if (customer == null)
             {
                 return HttpNotFound();
@@ -58,11 +61,12 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,CityId,StateId,ZipcodeId,PickupDayId")] Customer customer)
+        public ActionResult Create([Bind(Include = "CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,CityId,StateId,ZipcodeId,PickupDayId, ApplicationUserId")] Customer customer)
         {
 			ApplicationDbContext db = new ApplicationDbContext();
 			if (ModelState.IsValid)
             {
+				customer.ApplicationUserID = User.Identity.GetUserId();
 				customer.PickupStatus = false;
 				db.Customer.Add(customer);
                 db.SaveChanges();
@@ -73,6 +77,7 @@ namespace TrashCollector.Controllers
             ViewBag.StateId = new SelectList(db.State, "StateId", "Abbreviation", customer.StateId);
             ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip", customer.ZipcodeId);
 			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", customer.PickupDayId);
+
 			return View(customer);
         }
 
