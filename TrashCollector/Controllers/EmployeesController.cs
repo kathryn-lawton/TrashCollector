@@ -17,7 +17,8 @@ namespace TrashCollector.Controllers
         // GET: Employees
         public ActionResult Index()
         {
-            return View(db.Employee.ToList());
+            var employee = db.Employee.Include(e => e.Zipcode);
+            return View(employee.ToList());
         }
 
         // GET: Employees/Details/5
@@ -38,6 +39,7 @@ namespace TrashCollector.Controllers
         // GET: Employees/Create
         public ActionResult Create()
         {
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip");
             return View();
         }
 
@@ -46,7 +48,7 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2")] Employee employee)
+        public ActionResult Create([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,ZipcodeId")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -55,6 +57,7 @@ namespace TrashCollector.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip", employee.ZipcodeId);
             return View(employee);
         }
 
@@ -70,6 +73,7 @@ namespace TrashCollector.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip", employee.ZipcodeId);
             return View(employee);
         }
 
@@ -78,7 +82,7 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2")] Employee employee)
+        public ActionResult Edit([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,ZipcodeId")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -86,6 +90,7 @@ namespace TrashCollector.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip", employee.ZipcodeId);
             return View(employee);
         }
 

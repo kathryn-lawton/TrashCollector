@@ -29,10 +29,14 @@ namespace TrashCollector.Models
 		public int ZipcodeId { get; set; }
 		public Zipcode Zipcode { get; set; }
 
-		public string PickupDay { get; set; }
+		[ForeignKey("PickupDay")]
+		public int PickupDayId { get; set; }
+		public PickupDay PickupDay { get; set; }
 
 		public bool PickupStatus { get; set; }
-										   
+
+		// public IEnumerable<PickupDay> PickupDays { get; set; }										   
+		
 		//[ForeignKey("BillingStatusId")]
 		//public int BillingStatusId { get; set; }
 		//public BillingStatus BillingStatus { get; set; }

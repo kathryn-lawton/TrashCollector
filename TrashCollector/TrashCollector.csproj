@@ -203,9 +203,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201807061639098_initialmigration.cs" />
-    <Compile Include="Migrations\201807061639098_initialmigration.Designer.cs">
-      <DependentUpon>201807061639098_initialmigration.cs</DependentUpon>
+    <Compile Include="Migrations\201807061908524_initialmigration.cs" />
+    <Compile Include="Migrations\201807061908524_initialmigration.Designer.cs">
+      <DependentUpon>201807061908524_initialmigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807061959190_addpickupday.cs" />
+    <Compile Include="Migrations\201807061959190_addpickupday.Designer.cs">
+      <DependentUpon>201807061959190_addpickupday.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807062049153_updatecustomer.cs" />
+    <Compile Include="Migrations\201807062049153_updatecustomer.Designer.cs">
+      <DependentUpon>201807062049153_updatecustomer.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -214,15 +222,16 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\PickupDay.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Models\Zipcode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-journal3.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap-united.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -280,6 +289,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_LayoutCustomer.cshtml" />
+    <Content Include="Views\Shared\_LayoutEmployee.cshtml" />
     <Content Include="Views\Customers\Create.cshtml" />
     <Content Include="Views\Customers\Delete.cshtml" />
     <Content Include="Views\Customers\Details.cshtml" />
@@ -290,8 +301,6 @@
     <Content Include="Views\Employees\Details.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
-    <Content Include="Views\Shared\_LayoutCustomer.cshtml" />
-    <Content Include="Views\Shared\_LayoutEmployee.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -310,8 +319,14 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201807061639098_initialmigration.resx">
-      <DependentUpon>201807061639098_initialmigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201807061908524_initialmigration.resx">
+      <DependentUpon>201807061908524_initialmigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807061959190_addpickupday.resx">
+      <DependentUpon>201807061959190_addpickupday.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807062049153_updatecustomer.resx">
+      <DependentUpon>201807062049153_updatecustomer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

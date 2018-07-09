@@ -13,8 +13,8 @@ namespace TrashCollector.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(TrashCollector.Models.ApplicationDbContext context)
-        {
+		protected override void Seed(TrashCollector.Models.ApplicationDbContext context)
+		{
 			context.Roles.AddOrUpdate(
 				r => r.Name,
 				new IdentityRole { Name = "Customer" },
@@ -66,7 +66,6 @@ namespace TrashCollector.Migrations
 				new Models.State { Abbreviation = "OR" },
 				new Models.State { Abbreviation = "PA" },
 				new Models.State { Abbreviation = "RI" },
-				new Models.State { Abbreviation = "AL" },
 				new Models.State { Abbreviation = "SC" },
 				new Models.State { Abbreviation = "SD" },
 				new Models.State { Abbreviation = "TN" },
@@ -123,6 +122,15 @@ namespace TrashCollector.Migrations
 				new Models.Zipcode { Zip = "53293" },
 				new Models.Zipcode { Zip = "53295" }
 				);
+
+			context.PickupDay.AddOrUpdate(
+				p => p.Name,
+				new Models.PickupDay { Name = "Monday" },
+				new Models.PickupDay { Name = "Tuesday" },
+				new Models.PickupDay { Name = "Wednesday" },
+				new Models.PickupDay { Name = "Thursday" },
+				new Models.PickupDay { Name = "Friday" }
+				);
 		}
-	}
+		}
 }

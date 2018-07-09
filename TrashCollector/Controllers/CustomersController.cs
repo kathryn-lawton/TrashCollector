@@ -17,7 +17,8 @@ namespace TrashCollector.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            return View(db.Customer.ToList());
+            var customer = db.Customer.Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
+            return View(customer.ToList());
         }
 
         // GET: Customers/Details/5
@@ -27,7 +28,7 @@ namespace TrashCollector.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = db.Customer.Find(id);
+            var customer = db.Customer.Where(c => c.CustomerId == id).Select(c => c).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
             if (customer == null)
             {
                 return HttpNotFound();
@@ -38,7 +39,18 @@ namespace TrashCollector.Controllers
         // GET: Customers/Create
         public ActionResult Create()
         {
-            return View();
+			ApplicationDbContext db = new ApplicationDbContext();
+			var pickupDays = db.PickupDay.ToList();
+			Customer customer = new Customer();
+			{
+
+			}
+
+			ViewBag.CityId = new SelectList(db.City, "CityId", "Name");
+            ViewBag.StateId = new SelectList(db.State, "StateId", "Abbreviation");
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip");
+			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name");
+            return View(customer);
         }
 
         // POST: Customers/Create
@@ -46,16 +58,22 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2")] Customer customer)
+        public ActionResult Create([Bind(Include = "CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,CityId,StateId,ZipcodeId,PickupDayId")] Customer customer)
         {
-            if (ModelState.IsValid)
+			ApplicationDbContext db = new ApplicationDbContext();
+			if (ModelState.IsValid)
             {
-                db.Customer.Add(customer);
+				customer.PickupStatus = false;
+				db.Customer.Add(customer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(customer);
+            ViewBag.CityId = new SelectList(db.City, "CityId", "Name", customer.CityId);
+            ViewBag.StateId = new SelectList(db.State, "StateId", "Abbreviation", customer.StateId);
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip", customer.ZipcodeId);
+			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", customer.PickupDayId);
+			return View(customer);
         }
 
         // GET: Customers/Edit/5
@@ -70,7 +88,11 @@ namespace TrashCollector.Controllers
             {
                 return HttpNotFound();
             }
-            return View(customer);
+            ViewBag.CityId = new SelectList(db.City, "CityId", "Name", customer.CityId);
+            ViewBag.StateId = new SelectList(db.State, "StateId", "Abbreviation", customer.StateId);
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip", customer.ZipcodeId);
+			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", customer.PickupDayId);
+			return View(customer);
         }
 
         // POST: Customers/Edit/5
@@ -78,7 +100,7 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2")] Customer customer)
+        public ActionResult Edit([Bind(Include = "CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,CityId,StateId,ZipcodeId,PickupDayId,PickupStatus")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +108,11 @@ namespace TrashCollector.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(customer);
+            ViewBag.CityId = new SelectList(db.City, "CityId", "Name", customer.CityId);
+            ViewBag.StateId = new SelectList(db.State, "StateId", "Abbreviation", customer.StateId);
+            ViewBag.ZipcodeId = new SelectList(db.Zipcode, "ZipcodeId", "Zip", customer.ZipcodeId);
+			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", customer.PickupDayId);
+			return View(customer);
         }
 
         // GET: Customers/Delete/5

@@ -12,6 +12,30 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.City.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State.Abbreviation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State.Abbreviation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Zipcode.Zip)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Zipcode.Zip)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
 
@@ -49,6 +73,22 @@
 
         <dd>
             @Html.DisplayFor(model => model.StreetAddress2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PickupDay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PickupDay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PickupStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PickupStatus)
         </dd>
 
     </dl>

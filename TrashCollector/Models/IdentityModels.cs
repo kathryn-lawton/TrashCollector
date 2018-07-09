@@ -31,11 +31,12 @@ namespace TrashCollector.Models
             return new ApplicationDbContext();
         }
 
-		public DbSet<Zipcode> Zipcode { get; set; }
 		public DbSet<City> City { get; set; }
 		public DbSet<State> State { get; set; }
+		public DbSet<Zipcode> Zipcode { get; set; }
 		public DbSet<Customer> Customer { get; set; }
 		public DbSet<Employee> Employee { get; set; }
+		public DbSet<PickupDay> PickupDay { get; set; }
 		
 
 
