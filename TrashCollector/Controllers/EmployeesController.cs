@@ -86,10 +86,11 @@ namespace TrashCollector.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+
+		// POST: Employees/Edit/5
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+		// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+		[HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "EmployeeId,FirstName,LastName,EmailAddress,ZipcodeId")] Employee employee)
         {
@@ -103,8 +104,8 @@ namespace TrashCollector.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Delete/5
-        public ActionResult Delete(int? id)
+		// GET: Employees/Delete/5
+		public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -141,6 +142,7 @@ namespace TrashCollector.Controllers
 			List<Pickup> pickups = new List<Pickup>();
 
 			var pickupDay = db.PickupDay.Where(d => d.PickupDayId == id).FirstOrDefault();
+			//var pickupZipcode = db.Zipcode.Where(z => z.ZipcodeId == id).FirstOrDefault();
 			pickups.InsertRange(0, db.Pickup.Where(p => p.PickupDayId == pickupDay.PickupDayId && p.PickupStatus == false).Include(p => p.Customer).ToList());
 			var customerPickups = db.Customer.Where(c => c.PickupDayId == pickupDay.PickupDayId && c.ZipcodeId == employee.ZipcodeId).Select(c => c).ToList();
 
@@ -150,6 +152,7 @@ namespace TrashCollector.Controllers
 				pickup.Customer = customer;
 				pickup.PickupCost = 20.50;
 				pickup.PickupDayId = pickupDay.PickupDayId;
+			//	pickup.ZipcodeId = pickupZipcode.ZipcodeId;
 				pickup.PickupStatus = false;
 				pickups.Add(pickup);
 			}
@@ -162,7 +165,37 @@ namespace TrashCollector.Controllers
 			return View(model);
 		}
 
-        protected override void Dispose(bool disposing)
+		[HttpGet]
+		public ActionResult ConfirmPickup(int? id)
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			Pickup pickup = db.Pickup.Find(id);
+			if (pickup == null)
+			{
+				return HttpNotFound();
+			}
+			ViewBag.PickupId = new SelectList(db.Pickup, "PickupId", "PickupStatus", pickup.PickupId);
+			return View(pickup);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult ConfirmPickup([Bind(Include = "PickupId, PickupStatus, PickupCost, PickupDayId, CustomerId, ZipcodeId")] Pickup pickup)
+		{
+			if (ModelState.IsValid)
+			{
+				db.Entry(pickup).State = EntityState.Modified;
+				db.SaveChanges();
+				return RedirectToAction("Index");
+			}
+			ViewBag.PickupId = new SelectList(db.Pickup, "PickupId", "PickupStatus", pickup.PickupId);
+			return View(pickup);
+		}
+
+		protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

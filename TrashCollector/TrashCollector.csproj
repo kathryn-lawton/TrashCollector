@@ -203,9 +203,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201807100050324_initialMigration.cs" />
-    <Compile Include="Migrations\201807100050324_initialMigration.Designer.cs">
-      <DependentUpon>201807100050324_initialMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201807101237420_initialmigration.cs" />
+    <Compile Include="Migrations\201807101237420_initialmigration.Designer.cs">
+      <DependentUpon>201807101237420_initialmigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -224,6 +224,7 @@
     <Compile Include="ViewModels\EmployeePickupDayModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-darkly.css" />
     <Content Include="Content\bootstrap-journal3.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -298,6 +299,8 @@
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Customers\AddPickupDay.cshtml" />
     <Content Include="Views\Employees\Pickups.cshtml" />
+    <Content Include="Views\Customers\MonthlyBill.cshtml" />
+    <Content Include="Views\Employees\ConfirmPickup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -316,8 +319,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201807100050324_initialMigration.resx">
-      <DependentUpon>201807100050324_initialMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201807101237420_initialmigration.resx">
+      <DependentUpon>201807101237420_initialmigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

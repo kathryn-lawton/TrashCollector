@@ -3,7 +3,7 @@ namespace TrashCollector.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialMigration : DbMigration
+    public partial class initialmigration : DbMigration
     {
         public override void Up()
         {
@@ -156,12 +156,15 @@ namespace TrashCollector.Migrations
                         PickupCost = c.Double(nullable: false),
                         PickupDayId = c.Int(nullable: false),
                         CustomerId = c.Int(nullable: false),
+                        ZipcodeId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.PickupId)
                 .ForeignKey("dbo.Customers", t => t.CustomerId, cascadeDelete: true)
                 .ForeignKey("dbo.PickupDays", t => t.PickupDayId, cascadeDelete: false)
+                .ForeignKey("dbo.Zipcodes", t => t.ZipcodeId, cascadeDelete: false)
                 .Index(t => t.PickupDayId)
-                .Index(t => t.CustomerId);
+                .Index(t => t.CustomerId)
+                .Index(t => t.ZipcodeId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -178,6 +181,7 @@ namespace TrashCollector.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.Pickups", "ZipcodeId", "dbo.Zipcodes");
             DropForeignKey("dbo.Pickups", "PickupDayId", "dbo.PickupDays");
             DropForeignKey("dbo.Pickups", "CustomerId", "dbo.Customers");
             DropForeignKey("dbo.Employees", "ZipcodeId", "dbo.Zipcodes");
@@ -191,6 +195,7 @@ namespace TrashCollector.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.Pickups", new[] { "ZipcodeId" });
             DropIndex("dbo.Pickups", new[] { "CustomerId" });
             DropIndex("dbo.Pickups", new[] { "PickupDayId" });
             DropIndex("dbo.Employees", new[] { "ApplicationUserID" });

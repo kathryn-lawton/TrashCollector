@@ -156,7 +156,7 @@ namespace TrashCollector.Controllers
 			Pickup pickup = new Pickup();
 			pickup.CustomerId = customer.CustomerId;
 			pickup.PickupDayId = model.PickupDayId;
-			pickup.PickupCost = 20.50;
+			pickup.PickupCost = 20.00;
 			pickup.PickupStatus = false;
 
 			db.Pickup.Add(pickup);
