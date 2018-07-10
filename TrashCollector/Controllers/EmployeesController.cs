@@ -16,27 +16,45 @@ namespace TrashCollector.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Employees
+  //      // GET: Employees
+		//[HttpGet]
+  //      public ActionResult Index()
+  //      {
+  //          var employee = db.Employee.Include(e => e.Zipcode);
+  //          return View(employee.ToList());
+  //      }
+
 		[HttpGet]
-        public ActionResult Index()
-        {
-            var employee = db.Employee.Include(e => e.Zipcode);
-            return View(employee.ToList());
-        }
-
-		//[HttpPost]
-		//public ActionResult Index(Employee employee)
-		//{
-		//	var customers = db.Customer.Where(c => c.Zipcode == employee.Zipcode).Include
-		//}
-
-		public ActionResult Details(int? id)
+		public ActionResult Index(string searching)
 		{
-			if (id == null)
+			var currentUserId = User.Identity.GetUserId();
+			Employee employee = db.Employee.Where(e => e.ApplicationUserID == currentUserId).FirstOrDefault();
+			if (searching == null)
+			{
+				var customers = db.Customer.Where(c => c.ZipcodeId == employee.ZipcodeId ).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
+				return View(customers.ToList());
+			}
+			else
+			{
+				var customers = db.Customer.Where(c => c.ZipcodeId == employee.ZipcodeId).Where(c => c.PickupDay.Name.Contains(searching) || searching == null).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
+				return View(customers.ToList());
+			}
+
+
+			// return View();
+		}
+
+
+
+
+		public ActionResult Details()
+		{
+			var currentUserId = User.Identity.GetUserId();
+			if (currentUserId == null)
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
-			var employee = db.Employee.Where(e => e.EmployeeId == id).Select(c => c).Include(e => e.FirstName).Include(e => e.LastName).Include(e => e.EmailAddress).Include(e => e.Zipcode).FirstOrDefault();
+			Employee employee = db.Employee.Where(e => e.ApplicationUserID == currentUserId).Select(e => e).Include(e => e.FirstName).Include(e => e.LastName).Include(e => e.EmailAddress).Include(e => e.Zipcode).FirstOrDefault();
 			if (employee == null)
 			{
 				return HttpNotFound();

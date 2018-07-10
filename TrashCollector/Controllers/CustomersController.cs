@@ -16,13 +16,14 @@ namespace TrashCollector.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Customers
-        public ActionResult Index()
-        {
+		//GET: Customers
+			 public ActionResult Index()
+		{
 			var currentUserId = User.Identity.GetUserId();
-			var customers = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
-            return View(customers.ToList());
-        }
+			var customers = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City.Name).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
+			return View(customers.ToList());
+		}
+
 
         // GET: Customers/Details/5
         public ActionResult Details()
