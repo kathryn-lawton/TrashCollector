@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using TrashCollector.Models;
+using TrashCollector.ViewModels;
 
 namespace TrashCollector.Controllers
 {
@@ -67,7 +68,6 @@ namespace TrashCollector.Controllers
 			if (ModelState.IsValid)
             {
 				customer.ApplicationUserID = User.Identity.GetUserId();
-				customer.PickupStatus = false;
 				db.Customer.Add(customer);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -146,7 +146,36 @@ namespace TrashCollector.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult AddPickupDay([Bind(Include = "PickupDayId")] AddPickupModel model)
+		{
+			var currentUserId = User.Identity.GetUserId();
+			Customer customer = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
+
+			Pickup pickup = new Pickup();
+			pickup.CustomerId = customer.CustomerId;
+			pickup.PickupDayId = model.PickupDayId;
+			pickup.PickupCost = 20.50;
+			pickup.PickupStatus = false;
+
+			db.Pickup.Add(pickup);
+			db.SaveChanges();
+
+			return RedirectToAction("Index");
+		}
+
+		// GET: Customers/AddPickupDay
+		public ActionResult AddPickupDay()
+		{
+			var model = new AddPickupModel();
+
+			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", model.PickupDayId);
+
+			return View(model);
+		}
+
+		protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

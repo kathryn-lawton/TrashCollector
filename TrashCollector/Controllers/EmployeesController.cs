@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -7,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using TrashCollector.Models;
+using TrashCollector.ViewModels;
 
 namespace TrashCollector.Controllers
 {
@@ -58,7 +60,8 @@ namespace TrashCollector.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Employee.Add(employee);
+				employee.ApplicationUserID = User.Identity.GetUserId();
+				db.Employee.Add(employee);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -125,6 +128,39 @@ namespace TrashCollector.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+		public ActionResult Pickups(int? id)
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+
+			var currentUserId = User.Identity.GetUserId();
+			Employee employee = db.Employee.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.Zipcode).FirstOrDefault();
+			List<Pickup> pickups = new List<Pickup>();
+
+			var pickupDay = db.PickupDay.Where(d => d.PickupDayId == id).FirstOrDefault();
+			pickups.InsertRange(0, db.Pickup.Where(p => p.PickupDayId == pickupDay.PickupDayId && p.PickupStatus == false).Include(p => p.Customer).ToList());
+			var customerPickups = db.Customer.Where(c => c.PickupDayId == pickupDay.PickupDayId && c.ZipcodeId == employee.ZipcodeId).Select(c => c).ToList();
+
+			foreach(var customer in customerPickups)
+			{
+				var pickup = new Pickup();
+				pickup.Customer = customer;
+				pickup.PickupCost = 20.50;
+				pickup.PickupDayId = pickupDay.PickupDayId;
+				pickup.PickupStatus = false;
+				pickups.Add(pickup);
+			}
+
+			var model = new EmployeePickupDayModel();
+			model.CurrentDay = pickupDay;
+			model.CurrentZipcode = employee.Zipcode;
+			model.Pickups = pickups;
+
+			return View(model);
+		}
 
         protected override void Dispose(bool disposing)
         {

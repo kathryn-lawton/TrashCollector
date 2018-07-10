@@ -38,9 +38,6 @@
         <th>
             @Html.DisplayNameFor(model => model.PickupDay)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PickupStatus)
-        </th>
         <th></th>
     </tr>
 
@@ -72,9 +69,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.PickupDay.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PickupStatus)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.CustomerId }) |

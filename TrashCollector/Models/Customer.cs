@@ -36,15 +36,5 @@ namespace TrashCollector.Models
 		[ForeignKey("ApplicationUser")]
 		public string ApplicationUserID { get; set; }
 		public ApplicationUser ApplicationUser { get; set; }
-
-
-		public bool PickupStatus { get; set; }
-
-		// public IEnumerable<PickupDay> PickupDays { get; set; }										   
-		
-		//[ForeignKey("BillingStatusId")]
-		//public int BillingStatusId { get; set; }
-		//public BillingStatus BillingStatus { get; set; }
-		//account status (payment)
 	}
 }

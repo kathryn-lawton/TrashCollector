@@ -1,0 +1,41 @@
+﻿@model TrashCollector.ViewModels.EmployeePickupDayModel
+
+@{
+    ViewBag.Title = "Pickups";
+}
+
+<div>
+    <h2>Pickups for @Model.CurrentDay.Name at @Model.CurrentZipcode.Zip</h2>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Pickups.FirstOrDefault().Customer.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pickups.FirstOrDefault().Customer.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pickups.FirstOrDefault().PickupCost)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var pickup in Model.Pickups)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => pickup.Customer.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => pickup.Customer.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => pickup.PickupCost)
+                </td>
+                <td>
+                    @Html.ActionLink("Confirm Pickup", "ConfirmPickup", new { id = pickup.PickupId })
+                </td>
+            </tr>
+        }
+    </table>
+</div>
