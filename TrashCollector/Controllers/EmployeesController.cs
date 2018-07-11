@@ -16,14 +16,7 @@ namespace TrashCollector.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-  //      // GET: Employees
-		//[HttpGet]
-  //      public ActionResult Index()
-  //      {
-  //          var employee = db.Employee.Include(e => e.Zipcode);
-  //          return View(employee.ToList());
-  //      }
-
+		// GET: Employees
 		[HttpGet]
 		public ActionResult Index(string searching)
 		{
@@ -39,12 +32,21 @@ namespace TrashCollector.Controllers
 				var customers = db.Customer.Where(c => c.ZipcodeId == employee.ZipcodeId).Where(c => c.PickupDay.Name.Contains(searching) || searching == null).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
 				return View(customers.ToList());
 			}
-
-
-			// return View();
 		}
 
-
+		public ActionResult Details(int? id)
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			Pickup pickup = db.Pickup.Find(id);
+			if (pickup == null)
+			{
+				return HttpNotFound();
+			}
+			return View(pickup);
+		}
 
 
 		public ActionResult Details()
@@ -148,32 +150,27 @@ namespace TrashCollector.Controllers
             return RedirectToAction("Index");
         }
 
-		public ActionResult Pickups(int? id)
+		[HttpGet]
+		public ActionResult Pickups(int? PickupDayId)
 		{
-			if (id == null)
+			if (PickupDayId == null)
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
 
 			var currentUserId = User.Identity.GetUserId();
 			Employee employee = db.Employee.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.Zipcode).FirstOrDefault();
+			if(employee == null)
+			{
+				return HttpNotFound();
+			}
+
 			List<Pickup> pickups = new List<Pickup>();
 
-			var pickupDay = db.PickupDay.Where(d => d.PickupDayId == id).FirstOrDefault();
+			var pickupDay = db.PickupDay.Where(d => d.PickupDayId == PickupDayId).FirstOrDefault();
 			//var pickupZipcode = db.Zipcode.Where(z => z.ZipcodeId == id).FirstOrDefault();
-			pickups.InsertRange(0, db.Pickup.Where(p => p.PickupDayId == pickupDay.PickupDayId && p.PickupStatus == false).Include(p => p.Customer).ToList());
+			pickups.InsertRange(0, db.Pickup.Where(p => p.PickupDayId == pickupDay.PickupDayId && p.PickupStatus == false && p.ZipcodeId == employee.ZipcodeId).Include(p => p.Customer).ToList());
 			var customerPickups = db.Customer.Where(c => c.PickupDayId == pickupDay.PickupDayId && c.ZipcodeId == employee.ZipcodeId).Select(c => c).ToList();
-
-			foreach(var customer in customerPickups)
-			{
-				var pickup = new Pickup();
-				pickup.Customer = customer;
-				pickup.PickupCost = 20.50;
-				pickup.PickupDayId = pickupDay.PickupDayId;
-			//	pickup.ZipcodeId = pickupZipcode.ZipcodeId;
-				pickup.PickupStatus = false;
-				pickups.Add(pickup);
-			}
 
 			var model = new EmployeePickupDayModel();
 			model.CurrentDay = pickupDay;
@@ -183,6 +180,22 @@ namespace TrashCollector.Controllers
 			return View(model);
 		}
 
+		[HttpPost, ActionName("Pickups")]
+		[ValidateAntiForgeryToken]
+		public ActionResult Pickups(int id)
+		{
+			Pickup pickup = db.Pickup.Find(id);
+			if (pickup == null)
+			{
+				return HttpNotFound();
+			}
+
+			Employee employee = db.Employee.Find(id);
+			db.Employee.Remove(employee);
+			db.SaveChanges();
+			return RedirectToAction("Index");
+		}
+
 		[HttpGet]
 		public ActionResult ConfirmPickup(int? id)
 		{
@@ -190,12 +203,16 @@ namespace TrashCollector.Controllers
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
-			Pickup pickup = db.Pickup.Find(id);
+
+			Pickup pickup = db.Pickup.Where(p => p.PickupId == id).Include(p => p.Customer).FirstOrDefault();
 			if (pickup == null)
 			{
 				return HttpNotFound();
 			}
-			ViewBag.PickupId = new SelectList(db.Pickup, "PickupId", "PickupStatus", pickup.PickupId);
+
+			pickup.PickupStatus = true;
+			db.SaveChanges();
+
 			return View(pickup);
 		}
 

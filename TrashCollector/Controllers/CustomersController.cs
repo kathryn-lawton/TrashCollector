@@ -16,29 +16,63 @@ namespace TrashCollector.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-		//GET: Customers
-			 public ActionResult Index()
+		[HttpGet]
+		public ActionResult Index(string searching)
 		{
 			var currentUserId = User.Identity.GetUserId();
-			var customers = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City.Name).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
-			return View(customers.ToList());
+			if (User.IsInRole("Employee"))
+			{
+				Employee employee = db.Employee.Where(e => e.ApplicationUserID == currentUserId).FirstOrDefault();
+
+				List<Customer> customers = new List<Customer>();
+				if(!string.IsNullOrEmpty(searching))
+				{
+					customers = db.Customer.Where(c => c.ZipcodeId == employee.ZipcodeId && c.PickupDay.Name.Contains(searching)).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).ToList();
+				}
+				else
+				{
+					customers = db.Customer.Where(c => c.ZipcodeId == employee.ZipcodeId).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).ToList();
+				}
+
+				ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name");
+				return View(customers.ToList());
+			}
+			else if(User.IsInRole("Customer"))
+			{
+				var customers = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay);
+				return View(customers.ToList());
+			}
+			else
+			{
+				return RedirectToAction("Index", "Home");
+			}
 		}
 
-
-        // GET: Customers/Details/5
-        public ActionResult Details()
+		// GET: Customers/Details/5
+		public ActionResult Details(int? id)
         {
-			var currentUserId = User.Identity.GetUserId();
-			if (currentUserId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-			Customer customer = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(customer);
+			Customer customer;
+			if(id == null)
+			{
+				var currentUserId = User.Identity.GetUserId();
+				if (currentUserId == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+
+				customer = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
+			}
+			else
+			{
+				customer = db.Customer.Where(c => c.CustomerId == id).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
+			}
+
+			if (customer == null)
+			{
+				return HttpNotFound();
+			}
+
+			return View(customer);
         }
 
         // GET: Customers/Create
@@ -70,6 +104,17 @@ namespace TrashCollector.Controllers
             {
 				customer.ApplicationUserID = User.Identity.GetUserId();
 				db.Customer.Add(customer);
+
+				Pickup pickup = new Pickup()
+				{
+					CustomerId = customer.CustomerId,
+					PickupStatus = false,
+					PickupCost = 20.50,
+					PickupDayId = customer.PickupDayId,
+					ZipcodeId = customer.ZipcodeId
+				};
+				db.Pickup.Add(pickup);
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -147,6 +192,18 @@ namespace TrashCollector.Controllers
             return RedirectToAction("Index");
         }
 
+
+		// GET: Customers/AddPickupDay
+		[HttpGet]
+		public ActionResult AddPickupDay()
+		{
+			var model = new AddPickupModel();
+
+			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", model.PickupDayId);
+
+			return View(model);
+		}
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult AddPickupDay([Bind(Include = "PickupDayId")] AddPickupModel model)
@@ -159,6 +216,7 @@ namespace TrashCollector.Controllers
 			pickup.PickupDayId = model.PickupDayId;
 			pickup.PickupCost = 20.00;
 			pickup.PickupStatus = false;
+			pickup.ZipcodeId = customer.ZipcodeId;
 
 			db.Pickup.Add(pickup);
 			db.SaveChanges();
@@ -166,14 +224,26 @@ namespace TrashCollector.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// GET: Customers/AddPickupDay
-		public ActionResult AddPickupDay()
+		[HttpGet]
+		public ActionResult MonthlyBill()
 		{
-			var model = new AddPickupModel();
+			var currentUserId = User.Identity.GetUserId();
+			Customer customer = db.Customer.Where(c => c.ApplicationUserID == currentUserId).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).Include(c => c.PickupDay).FirstOrDefault();
+			var foundPickups = db.Pickup.Where(p => p.CustomerId == customer.CustomerId && p.PickupStatus == true).Include(p =>p.PickupDay).ToList();
 
-			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", model.PickupDayId);
+			double totalBill = 0;
+			foreach(var pickup in foundPickups)
+			{
+				totalBill += pickup.PickupCost;
+			}
 
-			return View(model);
+			MonthlyBillingModel bill = new MonthlyBillingModel()
+			{
+				Pickups = foundPickups,
+				TotalMonthlyBill = totalBill
+			};
+
+			return View(bill);
 		}
 
 		protected override void Dispose(bool disposing)
