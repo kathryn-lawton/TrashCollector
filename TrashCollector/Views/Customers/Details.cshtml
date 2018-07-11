@@ -1,5 +1,9 @@
 ﻿@model TrashCollector.Models.Customer
 
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
 @{
     ViewBag.Title = "Details";
 }
@@ -98,13 +102,49 @@
 
 <div id="map"></div>
 <script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: 43.038902, lng: -87.906474},
-          zoom: 8
-        });
-      }
+
+    $.ajax({
+        url: @Url.Action("GetAddress", "Customers"),
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ "resultAddress": address }),
+        dataType: "json",
+        success: function () { alert('Success'); },
+        error: function () { alert{ 'Error' }; }
+    });
+
+
+    var map;
+    var geocoder = new google.maps.Geocoder(AIzaSyD6nDPnZfRdHImsuZS7g1MsaftUa - yxxPY);
+    function initMap() {
+        let customerAddress = 
+        
+        getCoordinates(customerAddress, function (coords) {
+            var mapOptions = {
+                zoom: 12,
+                center: new google.maps.LatLng(coords[0], coords[1])
+            };
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        })
+
+        //var milwaukee = { lat: 43.038902, lng: -87.906474 };
+        //map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: milwaukee});
+
+        //var marker = new google.maps.Marker({ position: milwaukee, map: map });
+    }
+
+    function getCoordinates(address, callback) {
+        var coordinates;
+        geocoder.geocode({ address: address }, function (results, status) {
+            coords_obj = results[0].geometry.location;
+            coordinates = [coords_obj.lat, coords_obj.lng];
+            callback(coordinates);
+        })
+    }
+
+
+
+   
+    
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6nDPnZfRdHImsuZS7g1MsaftUa-yxxPY&callback=initMap"
         async defer></script>
