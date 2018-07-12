@@ -45,6 +45,11 @@ namespace TrashCollector.Migrations
 				new Models.PickupDay { Name = "Thursday" },
 				new Models.PickupDay { Name = "Friday" }
 				);
+
+			context.Pickup.AddOrUpdate(
+				p => p.PickupStatus,
+				new Models.Pickup { PickupStatus = false, PickupCost = 20, PickupDayId = 1, CustomerId = 1, ZipcodeId = 1 }
+				);
 		}
     }
 }

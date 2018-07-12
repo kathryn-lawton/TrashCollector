@@ -4,14 +4,44 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Profile</h2>
 
 <div>
     <h4>Customer</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>First Name</dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>Last Name</dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>Email Address</dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddress)
+        </dd>
+
+        <dt>Street Address 1</dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StreetAddress1)
+        </dd>
+
+        <dt>Street Address 2</dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StreetAddress2)
+        </dd>
+
         <dt>
-            @Html.DisplayNameFor(model => model.City.Name)
+            @Html.DisplayNameFor(model => model.City)
         </dt>
 
         <dd>
@@ -19,7 +49,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.State.Abbreviation)
+            @Html.DisplayNameFor(model => model.State)
         </dt>
 
         <dd>
@@ -27,56 +57,14 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Zipcode.Zip)
+            @Html.DisplayNameFor(model => model.Zipcode)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Zipcode.Zip)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EmailAddress)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StreetAddress1)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StreetAddress1)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StreetAddress2)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StreetAddress2)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PickupDay)
-        </dt>
+        <dt>Pickup Day</dt>
 
         <dd>
             @Html.DisplayFor(model => model.PickupDay.Name)
@@ -128,9 +116,14 @@
             async defer></script>
 }
     <p>
-        @if (!User.IsInRole("Employee"))
+        @if (User.IsInRole("Customer"))
         {
-            @Html.ActionLink("Edit", "Edit", new { id = Model.CustomerId }) 
+            @Html.ActionLink("Edit", "Edit", new { id = Model.CustomerId })
         }
-        @Html.ActionLink("Back to List", "Index")
+        else if (User.IsInRole("Employee"))
+        {
+            @Html.ActionLink("Back to Pickups", "Pickups", "Employees") 
+            @Html.ActionLink("Back to List", "Index")
+        }
+
     </p>

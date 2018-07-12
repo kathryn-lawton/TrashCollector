@@ -89,9 +89,6 @@ namespace TrashCollector.Controllers
 			ApplicationDbContext db = new ApplicationDbContext();
 			var pickupDays = db.PickupDay.ToList();
 			Customer customer = new Customer();
-			{
-
-			}
 
 			ViewBag.CityId = new SelectList(db.City, "CityId", "Name");
             ViewBag.StateId = new SelectList(db.State, "StateId", "Abbreviation");
@@ -117,7 +114,7 @@ namespace TrashCollector.Controllers
 				{
 					CustomerId = customer.CustomerId,
 					PickupStatus = false,
-					PickupCost = 20.50,
+					PickupCost = 20.00,
 					PickupDayId = customer.PickupDayId,
 					ZipcodeId = customer.ZipcodeId
 				};
@@ -159,7 +156,7 @@ namespace TrashCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,CityId,StateId,ZipcodeId,PickupDayId,PickupStatus")] Customer customer)
+        public ActionResult Edit([Bind(Include = "ApplicationUserID,CustomerId,FirstName,LastName,EmailAddress,StreetAddress1,StreetAddress2,CityId,StateId,ZipcodeId,PickupDayId,PickupStatus")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -173,33 +170,6 @@ namespace TrashCollector.Controllers
 			ViewBag.PickupDayId = new SelectList(db.PickupDay, "PickupDayId", "Name", customer.PickupDayId);
 			return View(customer);
         }
-
-        // GET: Customers/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Customer customer = db.Customer.Find(id);
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(customer);
-        }
-
-        // POST: Customers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Customer customer = db.Customer.Find(id);
-            db.Customer.Remove(customer);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
 
 		// GET: Customers/AddPickupDay
 		[HttpGet]

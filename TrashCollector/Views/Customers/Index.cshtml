@@ -7,32 +7,20 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.City.Name)
+                @Html.DisplayNameFor(model => model.City)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State.Abbreviation)
+                @Html.DisplayNameFor(model => model.State)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Zipcode.Zip)
+                @Html.DisplayNameFor(model => model.Zipcode)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StreetAddress1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StreetAddress2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PickupDay)
-            </th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Address</th>
+            <th>Street Address 1 </th>
+            <th>Street Address 2</th>
+            <th>Pickup Day</th>
             <th></th>
         </tr>
 
@@ -68,8 +56,7 @@
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.CustomerId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.CustomerId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.CustomerId })
+                    @Html.ActionLink("Details", "Details", new { id = item.CustomerId })
                 </td>
             </tr>
         }
@@ -103,32 +90,21 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.City.Name)
+                    @Html.DisplayNameFor(model => model.City)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.State.Abbreviation)
+                    @Html.DisplayNameFor(model => model.State)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Zipcode.Zip)
+                    @Html.DisplayNameFor(model => model.Zipcode)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EmailAddress)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StreetAddress1)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StreetAddress2)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PickupDay)
-                </th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email Address</th>
+                <th>Street Address 1 </th>
+                <th>Street Address 2</th>
+                <th>Pickup Day</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>

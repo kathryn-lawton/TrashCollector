@@ -124,32 +124,6 @@ namespace TrashCollector.Controllers
             return View(employee);
         }
 
-		// GET: Employees/Delete/5
-		public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Employee employee = db.Employee.Find(id);
-            if (employee == null)
-            {
-                return HttpNotFound();
-            }
-            return View(employee);
-        }
-
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Employee employee = db.Employee.Find(id);
-            db.Employee.Remove(employee);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
 		[HttpGet]
 		public ActionResult Pickups(int? PickupDayId)
 		{

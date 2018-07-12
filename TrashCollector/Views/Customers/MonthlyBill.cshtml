@@ -5,12 +5,8 @@
 
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Pickups.FirstOrDefault().PickupDay)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Pickups.FirstOrDefault().PickupCost)
-        </th>
+        <th>Pickup Day</th>
+        <th>Pickup Cost</th>
     </tr>
 
     @foreach (var pickup in Model.Pickups)
@@ -29,3 +25,5 @@
         <td>$@Model.TotalMonthlyBill</td>
     </tr>
 </table>
+<br />
+<center><img src="~/Images/p&rl&a.jpg" /></center>

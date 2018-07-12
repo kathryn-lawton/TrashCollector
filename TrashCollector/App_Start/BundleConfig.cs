@@ -23,7 +23,7 @@ namespace TrashCollector
 					  "~/Scripts/bootstrap.js"));
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
-					  "~/Content/bootstrap-journal3.css",
+					  "~/Content/bootstrap-superhero.css",
 					  "~/Content/site.css"));
 		}
 	}
