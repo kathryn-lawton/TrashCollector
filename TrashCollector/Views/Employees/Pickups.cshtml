@@ -33,6 +33,7 @@
                     @Html.DisplayFor(modelItem => pickup.PickupCost)
                 </td>
                 <td>
+                    @Html.ActionLink("Customer Details", "Details", "Customers", new { id = pickup.CustomerId }, null) |
                     @Html.ActionLink("Confirm Pickup", "ConfirmPickup", new { id = pickup.PickupId })
                 </td>
             </tr>

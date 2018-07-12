@@ -75,9 +75,9 @@ namespace TrashCollector.Controllers
 			return View(customer);
         }
 
+
 		public ActionResult GetAddress(int? id)
 		{
-		//	Customer customer;
 			var customerAddress = db.Customer.Where(c => c.CustomerId == id).Include(c => c.City).Include(c => c.State).Include(c => c.Zipcode).FirstOrDefault();
 			string resultAddress = customerAddress.StreetAddress1 + " " + customerAddress.City.Name + " " + customerAddress.Zipcode.Zip;
 			return Json("resultAddress", JsonRequestBehavior.AllowGet);

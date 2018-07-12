@@ -1,9 +1,5 @@
 ﻿@model TrashCollector.Models.Customer
 
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</head>
-
 @{
     ViewBag.Title = "Details";
 }
@@ -89,68 +85,52 @@
     </dl>
 </div>
 
+<input id="userAddress" hidden value="@Model.StreetAddress1@Model.City.Name@Model.State.Abbreviation" />
+
 @if (User.IsInRole("Employee"))
 {
-<style>
-    /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-    #map {
-        height: 400px;
-        width: 400px;
-    }
-</style>
+    <style>
+        #map {
+            height: 400px;
+            width: 400px;
+        }
+    </style>
 
-<div id="map"></div>
-<script>
+    <div id="map"></div>
+    <script>
+        function findAddress() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var json = JSON.parse(this.response);
+                    
+                    var glat = json.results[0].geometry.location.lat;
+                    var glng = json.results[0].geometry.location.lng;
 
-    $.ajax({
-        url: @Url.Action("GetAddress", "Customers"),
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify({ "resultAddress": address }),
-        dataType: "json",
-        success: function () { alert('Success'); },
-        error: function () { alert{ 'Error' }; }
-    });
-
-
-    var map;
-    var geocoder = new google.maps.Geocoder(AIzaSyD6nDPnZfRdHImsuZS7g1MsaftUa - yxxPY);
-    function initMap() {
-        let customerAddress = 
-        
-        getCoordinates(customerAddress, function (coords) {
-            var mapOptions = {
-                zoom: 12,
-                center: new google.maps.LatLng(coords[0], coords[1])
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        center: { lat: 43.038902, lng: -87.906474 },
+                        zoom: 12
+                    });
+                    var marker = new google.maps.Marker({
+                        position: { lat: glat, lng: glng },
+                        map: map
+                    })
+                }
             };
-            map = new google.maps.Map(document.getElementById('map'), mapOptions);
-        })
 
-        //var milwaukee = { lat: 43.038902, lng: -87.906474 };
-        //map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: milwaukee});
-
-        //var marker = new google.maps.Marker({ position: milwaukee, map: map });
-    }
-
-    function getCoordinates(address, callback) {
-        var coordinates;
-        geocoder.geocode({ address: address }, function (results, status) {
-            coords_obj = results[0].geometry.location;
-            coordinates = [coords_obj.lat, coords_obj.lng];
-            callback(coordinates);
-        })
-    }
-
-
-
-   
-    
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6nDPnZfRdHImsuZS7g1MsaftUa-yxxPY&callback=initMap"
-        async defer></script>
+            var location = document.getElementById('userAddress').value.replace(' ', '');
+            console.log(location);
+            xmlhttp.open("GET", "http://maps.googleapis.com/maps/api/geocode/json?address={" + location + "}&sensor=false", true);
+            xmlhttp.send();
+        };
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxX_PLyVL008eoD7yGSgYvqzNPkAWNy_k&callback=findAddress"
+            async defer></script>
 }
-
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CustomerId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+    <p>
+        @if (!User.IsInRole("Employee"))
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.CustomerId }) 
+        }
+        @Html.ActionLink("Back to List", "Index")
+    </p>

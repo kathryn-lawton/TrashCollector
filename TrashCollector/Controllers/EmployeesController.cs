@@ -155,7 +155,12 @@ namespace TrashCollector.Controllers
 		{
 			if (PickupDayId == null)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				PickupDayId = (int)DateTime.Now.DayOfWeek;
+
+				if(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
+				{
+					return HttpNotFound();
+				}
 			}
 
 			var currentUserId = User.Identity.GetUserId();
@@ -168,7 +173,6 @@ namespace TrashCollector.Controllers
 			List<Pickup> pickups = new List<Pickup>();
 
 			var pickupDay = db.PickupDay.Where(d => d.PickupDayId == PickupDayId).FirstOrDefault();
-			//var pickupZipcode = db.Zipcode.Where(z => z.ZipcodeId == id).FirstOrDefault();
 			pickups.InsertRange(0, db.Pickup.Where(p => p.PickupDayId == pickupDay.PickupDayId && p.PickupStatus == false && p.ZipcodeId == employee.ZipcodeId).Include(p => p.Customer).ToList());
 			var customerPickups = db.Customer.Where(c => c.PickupDayId == pickupDay.PickupDayId && c.ZipcodeId == employee.ZipcodeId).Select(c => c).ToList();
 
