@@ -226,9 +226,6 @@
     <Compile Include="ViewModels\MonthlyBillingModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-cosmo.css" />
-    <Content Include="Content\bootstrap-darkly.css" />
-    <Content Include="Content\bootstrap-journal3.css" />
     <Content Include="Content\bootstrap-superhero.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
